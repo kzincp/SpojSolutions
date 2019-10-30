@@ -1,0 +1,77 @@
+// BFS solution : https://www.spoj.com/problems/PT07Y/
+
+// Basic Idea --> In a tree if there are n vertices then there will be n-1 edges. This is the first condition of this problem.
+// Next we have to check if all the vertices are connected which can be done using BFS/ 
+// Perform a BFS from the root and check if all the vertices are connected. 
+// If all the vertices are not connected then there is a cycle. 
+
+#include<bits/stdc++.h>
+#define fr(i,c,b) for(int i=c;i<b;i++)
+#define si(x) int x; scanf("%d", &x)
+#define sll(x) ll x; scanf("%lld", &x)
+#define pi(x) printf("%d", x)
+#define pll(x) printf("%lld", x)
+#define nl printf("\n")
+#define watch(x) cout << (#x) << " is " << (x) << endl
+#define MAX 1000001
+
+typedef long long int ll;
+
+using namespace std;
+
+vector<vector<ll>> v;
+vector<bool> visited;
+
+void findcyc(ll n)
+{
+    visited.assign(n,false);    
+    visited[0]=true;
+    queue<ll> q;
+    q.push(0);
+    while(!q.empty())
+    {
+        n=q.front();
+        q.pop();
+        for(auto j:v[n])
+        {
+            if(visited[j])
+                continue;
+            visited[j]=true;
+            q.push(j);
+        }
+    }
+}
+
+int main()
+{
+    si(n); si(m); 
+    v.assign(n,vector<ll>());
+    fr(i,0,m)
+    { 
+ 
+        si(a); si(b);
+               --a; --b;
+        v[a].push_back(b); 
+       
+    }
+    
+    if(m!=n-1)
+    {
+        cout<<"NO"<<endl;
+    }
+    else
+    {
+    findcyc(n);
+    bool flag=false;
+    int c=0;
+    fr(i,0,n)
+    {
+        if(visited[i])
+            c++;
+    }
+    if(c==n)
+        cout<<"YES";
+    else
+        cout<<"NO";
+    }
+}
