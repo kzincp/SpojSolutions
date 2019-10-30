@@ -1,0 +1,78 @@
+// https://www.spoj.com/problems/PT07Z/
+
+// Basic idea ==> In this problem we have to find the diameter of the tree. 
+// Simple way to solve this problem is find the farthest node from the root and then find the farthest node from that node. 
+// The farthest node from root is going to be a leaf at the last level. We can use double BFS, double DFS or single DFS to solve this problem. 
+// The proof of this algorithm can be checked here : https://stackoverflow.com/questions/20010472/proof-of-correctness-algorithm-for-diameter-of-a-tree-in-graph-theory
+
+#include<bits/stdc++.h>
+#define fr(i,c,b) for(int i=c;i<b;i++)
+#define si(x) int x; scanf("%d", &x)
+#define sll(x) ll x; scanf("%lld", &x)
+#define pi(x) printf("%d", x)
+#define pll(x) printf("%lld", x)
+#define nl printf("\n")
+#define watch(x) cout << (#x) << " is " << (x) << endl
+#define MAX 1000001
+
+typedef long long int ll;
+
+using namespace std;
+
+int n;
+vector<vector<ll> > v; 
+
+pair<ll,ll> bfs(ll r)
+{
+    vector<bool> visited(n,false);
+    
+    visited[r]=true;
+    queue<ll> q;
+    q.push(r);
+    vector<ll> dist(n,-1);
+    dist[r]=0;
+    while(!q.empty())
+    {
+        ll s=q.front(); q.pop();
+        for(auto i:v[s])
+        {
+            if(!visited[i])
+            {
+                visited[i]=true;
+                dist[i]=dist[s]+1;
+                q.push(i);
+            }
+        }
+    }
+    
+    int maxx=INT_MIN; int indx;
+    pair<ll,ll> ans;
+    fr(i,0,n)
+    {
+      //  watch(dist[i]);
+        if(dist[i]>maxx)
+        {
+            maxx=dist[i];
+            indx=i;
+        }
+    }
+    ans=make_pair(maxx,indx);
+    return ans;
+    
+}
+
+int main()
+{
+    cin>>n;
+    v.assign(n,vector<ll>());
+    fr(i,1,n)
+    {
+        si(a); si(b); a--; b--; v[a].push_back(b); v[b].push_back(a);
+    }
+    pair<ll,ll> ans;
+    ans=bfs(0);
+    //cout<<ans.first<<" "<<ans.second<<" ";
+    ans=bfs(ans.second);
+    cout<<ans.first;
+}
+
